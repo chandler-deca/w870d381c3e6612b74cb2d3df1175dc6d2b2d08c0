@@ -29,8 +29,8 @@
   --chat-pad: 20px;
   --edge: 20px;
   --gutter: 28px;
-  /* How far the photo slides under the visible card. */
-  --chat-tuck: 20px;
+  /* Clear column between the photo and the chat on a laptop. */
+  --chat-gap: 32px;
 }
 
 * {
@@ -270,7 +270,7 @@ h1 {
 .photo {
   position: relative;
   min-height: 0;
-  margin-right: calc(var(--edge) + var(--chat-card) - var(--chat-tuck) - var(--gutter));
+  margin-right: calc(var(--edge) + var(--chat-card) + var(--chat-gap) - var(--gutter));
   border-radius: 24px;
   overflow: hidden;
   background:
