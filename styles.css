@@ -26,6 +26,7 @@
   --chat-w: 500px;
   /* The open widget keeps a 20px margin inside the iframe for its shadow. */
   --chat-pad: 20px;
+  --edge: 20px;
   /* The photo tucks under the chat so there is no empty strip between them. */
   --chat-overlap: 36px;
 }
@@ -70,9 +71,9 @@ body.nudged .stage {
 }
 
 #decagon-iframe {
-  right: calc(var(--chat-pad) * -1) !important;
-  bottom: calc(var(--chat-pad) * -1) !important;
-  max-height: calc(100dvh - 68px) !important;
+  right: calc(var(--edge) - var(--chat-pad)) !important;
+  bottom: calc(var(--edge) - var(--chat-pad)) !important;
+  max-height: calc(100dvh - 72px - var(--edge)) !important;
   clip-path: inset(0 var(--chat-pad) var(--chat-pad) 0);
 }
 
@@ -238,7 +239,7 @@ body.nudged #decagon-iframe {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
-  padding: 4px 28px 0;
+  padding: 4px 28px var(--edge);
   background: var(--canvas);
 }
 
@@ -267,7 +268,7 @@ h1 {
 .photo {
   position: relative;
   min-height: 0;
-  margin-right: calc(var(--chat-w) - var(--chat-pad) - var(--chat-overlap) - 28px);
+  margin-right: calc(var(--chat-w) - var(--chat-pad) + var(--edge) - var(--chat-overlap) - 28px);
   border-radius: 24px;
   overflow: hidden;
   background:
