@@ -24,8 +24,10 @@
   --zinc: #27272a;
   --font: "FK Grotesk Neue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --chat-w: 500px;
-  --chat-gap: 32px;
-  --chat-inset: 16px;
+  /* The open widget keeps a 20px margin inside the iframe for its shadow. */
+  --chat-pad: 20px;
+  /* The photo tucks under the chat so there is no empty strip between them. */
+  --chat-overlap: 36px;
 }
 
 * {
@@ -68,9 +70,10 @@ body.nudged .stage {
 }
 
 #decagon-iframe {
-  right: var(--chat-inset) !important;
-  bottom: var(--chat-inset) !important;
-  max-height: calc(100dvh - 112px) !important;
+  right: calc(var(--chat-pad) * -1) !important;
+  bottom: calc(var(--chat-pad) * -1) !important;
+  max-height: calc(100dvh - 68px) !important;
+  clip-path: inset(0 var(--chat-pad) var(--chat-pad) 0);
 }
 
 @keyframes widget-bounce {
@@ -235,7 +238,7 @@ body.nudged #decagon-iframe {
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
-  padding: 4px 28px 16px;
+  padding: 4px 28px 0;
   background: var(--canvas);
 }
 
@@ -264,7 +267,7 @@ h1 {
 .photo {
   position: relative;
   min-height: 0;
-  margin-right: calc(var(--chat-w) + var(--chat-gap) + var(--chat-inset) - 28px);
+  margin-right: calc(var(--chat-w) - var(--chat-pad) - var(--chat-overlap) - 28px);
   border-radius: 24px;
   overflow: hidden;
   background:
@@ -309,7 +312,6 @@ h1 {
 
   .hero {
     gap: 18px;
-    padding-bottom: 24px;
   }
 
   .hero-copy p {
