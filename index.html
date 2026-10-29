@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Decagon Health</title>
+  <link rel="stylesheet" href="styles.css?v=laptop3">
+</head>
+<body>
+  <div class="stage" inert>
+    <header class="mast">
+      <div class="util">
+        <div class="util-left">
+          <span>Las Vegas</span>
+          <span class="dot" aria-hidden="true"></span>
+          <span>English</span>
+          <span class="dot" aria-hidden="true"></span>
+          <span>Support</span>
+        </div>
+        <div class="util-right">
+          <span>Help paying your bill</span>
+          <span>Member Services 1-800-555-0142</span>
+        </div>
+      </div>
+      <div class="bar">
+        <div class="brand">
+          <span class="mark" aria-hidden="true"></span>
+          <span class="wordmark">Decagon Health</span>
+        </div>
+        <nav class="links" aria-label="Primary">
+          <span>Get care</span>
+          <span>Doctors &amp; locations</span>
+          <span>Pharmacy</span>
+          <span>Pay bills</span>
+          <span>Coaching</span>
+        </nav>
+        <div class="search" role="search">
+          <span class="search-text">Appointments, prescriptions, bills</span>
+          <span class="search-go">Search</span>
+        </div>
+        <div class="account">
+          <span class="register">Register</span>
+          <span class="signin">Sign in</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Las Vegas</h1>
+        <p>Doctors, pharmacies, and your health plan, connected. Office, video, and same-day care.</p>
+      </div>
+      <div class="photo">
+        <p class="fine">Nurse Advice 1-800-555-0177, 24/7 · Emergencies: call 911 · Decagon Health Downtown, 400 Market Street</p>
+      </div>
+    </section>
+  </div>
+  <div class="catch" aria-hidden="true"></div>
+
+  <script
+    src="https://decagon.ai/loaders/release/base/v1.js"
+    data-slug="81Bceiy_decagon_health_cr"
+  ></script>
+  <script>
+    window.addEventListener("decagonload", () => {
+      const open = () => window.duet && window.duet.open();
+      open();
+      setTimeout(open, 700);
+    });
+
+    const widgetFrame = () => document.getElementById("decagon-iframe");
+
+    let settleTimer;
+    const settle = () => document.body.classList.remove("nudged");
+
+    const nudge = () => {
+      document.body.classList.remove("nudged");
+      void document.body.offsetWidth;
+      document.body.classList.add("nudged");
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 550);
+    };
+
+    document.querySelector(".catch").addEventListener("pointerdown", nudge);
+
+    window.addEventListener("keydown", (event) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (document.activeElement === widgetFrame()) return;
+      nudge();
+    });
+  </script>
+</body>
+</html>
