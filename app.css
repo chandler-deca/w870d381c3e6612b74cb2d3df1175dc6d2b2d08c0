@@ -61,6 +61,19 @@ button {
   background: var(--canvas);
 }
 
+html.phone .app,
+html.app-page .app {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0;
+}
+
 .top, .chat-top {
   display: flex;
   align-items: center;
@@ -68,7 +81,7 @@ button {
   padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
 }
 
-.mark {
+.app .mark {
   width: 32px;
   height: 32px;
   flex: none;
@@ -98,7 +111,7 @@ button {
 
 .back { margin-left: 0; background: transparent; color: var(--ink); padding: 0 4px 0 0; }
 
-main {
+.app main {
   flex: 1;
   min-height: 0;
   overflow: auto;
@@ -205,11 +218,17 @@ main {
   font-size: 16px;
 }
 
-.fine {
+.app .fine {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  z-index: auto;
   margin: 18px 0 8px;
   color: var(--muted);
   font-size: 12px;
   line-height: 1.4;
+  text-shadow: none;
 }
 
 .tabs {
@@ -238,11 +257,11 @@ main {
 .chat {
   position: fixed;
   inset: 0;
-  z-index: 5;
+  z-index: 6;
   display: flex;
   flex-direction: column;
-  width: min(480px, 100%);
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   background: #fff;
 }
 

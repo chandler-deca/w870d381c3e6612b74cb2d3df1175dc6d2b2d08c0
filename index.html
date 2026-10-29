@@ -2,15 +2,40 @@
 <html lang="en" class="pending">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f3ff">
   <meta http-equiv="Accept-CH" content="Sec-CH-UA-Mobile">
-  <meta name="decagon-document" content="portal">
-  <meta name="decagon-surface" content="">
+  <meta name="decagon-explicit-surface" content="">
+  <meta name="decagon-auth-slot" content="">
   <title>Decagon Health</title>
-  <style>html.pending body { visibility: hidden; }</style>
-  <script src="surface.js"></script>
+  <style>
+    html.pending body { visibility: hidden; }
+    html.phone .stage, html.phone .catch { display: none !important; }
+    html.desk .app, html.desk .chat { display: none !important; }
+  </style>
+  <script>
+    (function () {
+      var q = "";
+      try { q = (new URLSearchParams(location.search).get("surface") || "").toLowerCase(); } catch (e) {}
+      var explicit = document.querySelector('meta[name="decagon-explicit-surface"]');
+      var named = explicit ? (explicit.getAttribute("content") || "").trim().toLowerCase() : "";
+      if (named !== "app" && named !== "portal") named = "";
+      var ua = navigator.userAgent || "";
+      var phone = /iPhone|iPod/i.test(ua) || (/Android/i.test(ua) && /Mobile/i.test(ua));
+      var shortSide = Math.min(screen.width || 0, screen.height || 0);
+      if (!phone && navigator.maxTouchPoints > 1 && shortSide > 0 && shortSide <= 500) phone = true;
+      try { if (navigator.userAgentData && navigator.userAgentData.mobile) phone = true; } catch (e) {}
+      if (q === "app" || named === "app") phone = true;
+      if (q === "portal" || named === "portal") phone = false;
+      var root = document.documentElement;
+      root.classList.remove("pending");
+      root.classList.add(phone ? "phone" : "desk");
+    })();
+  </script>
+  <script src="surface.js?v=2"></script>
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="stylesheet" href="styles.css?v=gap">
+  <link rel="stylesheet" href="app.css?v=3">
 </head>
 <body>
   <div class="stage" inert>
@@ -62,37 +87,56 @@
   </div>
   <div class="catch" aria-hidden="true"></div>
 
-  <script
-    src="https://decagon.ai/loaders/release/base/v1.js"
-    data-slug="81Bceiy_decagon_health_cr"
-  ></script>
+  <div class="app">
+    <header class="top">
+      <span class="mark" aria-hidden="true"></span>
+      <div class="who">
+        <b>Decagon Health</b>
+        <span id="plan">Jordan Rivera</span>
+      </div>
+      <button class="chat-btn" id="open-chat" type="button">Chat</button>
+    </header>
+    <main id="main"></main>
+    <nav class="tabs" id="tabs" aria-label="Sections"></nav>
+  </div>
+  <div class="chat" id="chat" hidden>
+    <header class="chat-top">
+      <button class="back" id="close-chat" type="button">Back</button>
+      <b>Chat</b>
+    </header>
+    <iframe id="chat-frame" title="Chat with Decagon Health" referrerpolicy="no-referrer"></iframe>
+  </div>
+  <script src="app.js?v=2"></script>
   <script>
-    window.addEventListener("decagonload", () => {
-      const open = () => window.duet && window.duet.open();
-      open();
-      setTimeout(open, 700);
-    });
+    if (document.documentElement.classList.contains("desk")) {
+      const loader = document.createElement("script");
+      loader.src = "https://decagon.ai/loaders/release/base/v1.js";
+      loader.dataset.slug = "81Bceiy_decagon_health_cr";
+      document.body.appendChild(loader);
 
-    const widgetFrame = () => document.getElementById("decagon-iframe");
+      window.addEventListener("decagonload", () => {
+        const open = () => window.duet && window.duet.open();
+        open();
+        setTimeout(open, 700);
+      });
 
-    let settleTimer;
-    const settle = () => document.body.classList.remove("nudged");
-
-    const nudge = () => {
-      document.body.classList.remove("nudged");
-      void document.body.offsetWidth;
-      document.body.classList.add("nudged");
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(settle, 550);
-    };
-
-    document.querySelector(".catch").addEventListener("pointerdown", nudge);
-
-    window.addEventListener("keydown", (event) => {
-      if (event.metaKey || event.ctrlKey || event.altKey) return;
-      if (document.activeElement === widgetFrame()) return;
-      nudge();
-    });
+      const widgetFrame = () => document.getElementById("decagon-iframe");
+      let settleTimer;
+      const settle = () => document.body.classList.remove("nudged");
+      const nudge = () => {
+        document.body.classList.remove("nudged");
+        void document.body.offsetWidth;
+        document.body.classList.add("nudged");
+        clearTimeout(settleTimer);
+        settleTimer = setTimeout(settle, 550);
+      };
+      document.querySelector(".catch").addEventListener("pointerdown", nudge);
+      window.addEventListener("keydown", (event) => {
+        if (event.metaKey || event.ctrlKey || event.altKey) return;
+        if (document.activeElement === widgetFrame()) return;
+        nudge();
+      });
+    }
   </script>
 </body>
 </html>

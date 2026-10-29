@@ -9,6 +9,7 @@ context.self = context;
 context.globalThis = context;
 vm.runInNewContext(code, context, { filename: "surface.js" });
 const classify = context.decagonClassify;
+const isPhone = context.decagonIsPhone;
 
 const IPHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1";
 const ANDROID = "Mozilla/5.0 (Linux; Android 15; Pixel 9) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36";
@@ -40,6 +41,18 @@ test("a named surface wins over the device and over auth headers", () => {
     surfaceQuery: "app",
     auth: { "x-decagon-auth-signature": "sig", "x-decagon-auth-epoch": "1" },
   }).surface, "portal");
+});
+
+test("the page treats a real phone as the app even when the request has no user agent", () => {
+  assert.equal(isPhone(IPHONE), true);
+  assert.equal(isPhone(ANDROID), true);
+  assert.equal(isPhone(""), false);
+  assert.equal(isPhone(DESKTOP), false);
+  assert.equal(isPhone(IPAD), false);
+  assert.equal(isPhone(TABLET), false);
+  assert.equal(isPhone(DESKTOP, { narrowTouch: true }), true);
+  assert.equal(isPhone(IPHONE, { surfaceQuery: "portal" }), false);
+  assert.equal(isPhone(DESKTOP, { surfaceQuery: "app" }), true);
 });
 
 test("auth headers select the app and are returned only for that surface", () => {

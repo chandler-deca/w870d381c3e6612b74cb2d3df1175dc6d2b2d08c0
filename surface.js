@@ -8,6 +8,19 @@
 
   // Same split as the product widget: a phone or tablet is the app, and an
   // iPad that asks for the desktop site (Macintosh UA, no ?1 hint) stays the portal.
+  function isPhone(ua, opts) {
+    opts = opts || {};
+    var namedSurface = named(opts.surfaceQuery);
+    if (namedSurface === "portal") return false;
+    if (namedSurface === "app") return true;
+    ua = ua || "";
+    if (/iPhone|iPod/i.test(ua)) return true;
+    if (/Android/i.test(ua) && /Mobile/i.test(ua)) return true;
+    if (opts.userAgentDataMobile) return true;
+    if (opts.narrowTouch) return true;
+    return false;
+  }
+
   function deviceSurface(ua, secCh, dataMobile) {
     if (String(secCh || "").trim() === "?1" || dataMobile) return "app";
     ua = ua || "";
@@ -32,28 +45,12 @@
   }
 
   root.decagonClassify = classify;
+  root.decagonIsPhone = isPhone;
 
   if (typeof document === "undefined") return;
 
-  var meta = document.querySelector('meta[name="decagon-surface"]');
-  var forced = meta && named(meta.getAttribute("content"));
-  var query = "";
-  try {
-    query = new URLSearchParams(location.search).get("surface") || "";
-  } catch (e) {}
-  var decision = forced
-    ? { surface: forced }
-    : classify({
-        userAgent: navigator.userAgent,
-        surfaceQuery: query,
-        userAgentDataMobile: !!(navigator.userAgentData && navigator.userAgentData.mobile),
-      });
-  var hereMeta = document.querySelector('meta[name="decagon-document"]');
-  var here = hereMeta && hereMeta.getAttribute("content") === "app" ? "app" : "portal";
-  if (decision.surface !== here) {
-    location.replace((decision.surface === "app" ? "app.html" : "index.html") + location.search + location.hash);
-    return;
-  }
+  // The page picks phone or desk inline, before this file. Do not navigate:
+  // a service worker that rewrites the next URL was sending iPhones back to the booth.
   document.documentElement.classList.remove("pending");
 
   if (!("serviceWorker" in navigator)) return;
@@ -63,14 +60,8 @@
     document.dispatchEvent(new CustomEvent("decagon-auth"));
   });
   navigator.serviceWorker.register("sw.js").then(function () {
-    var seen = false;
-    try { seen = !!sessionStorage.getItem("dh-sw"); } catch (err) {}
-    if (!navigator.serviceWorker.controller && !seen) {
-      try { sessionStorage.setItem("dh-sw", "1"); } catch (err) {}
-      navigator.serviceWorker.ready.then(function () { location.reload(); });
-    }
     var keyMeta = document.querySelector('meta[name="decagon-auth-key"]');
-    if (!keyMeta || here !== "app") return;
+    if (!keyMeta) return;
     var ask = function () {
       var worker = navigator.serviceWorker.controller;
       if (worker) worker.postMessage({ type: "decagon-auth", key: keyMeta.getAttribute("content") });
