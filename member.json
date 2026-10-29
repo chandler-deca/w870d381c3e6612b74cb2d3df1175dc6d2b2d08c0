@@ -1,0 +1,63 @@
+{
+  "member": {
+    "first_name": "Jordan",
+    "last_name": "Rivera",
+    "member_id": "DH-204517",
+    "plan_type": "Decagon Health HMO",
+    "doctor": "Dr. Priya Patel"
+  },
+  "appointment": {
+    "id": "APT-73120",
+    "visit_type": "Annual physical",
+    "doctor": "Dr. Priya Patel",
+    "department": "Primary Care",
+    "location": "Decagon Health Downtown, 400 Market Street, Suite 200",
+    "day": 3,
+    "time": "9:00 AM"
+  },
+  "prescriptions": [
+    {
+      "medication": "Atorvastatin 20 mg",
+      "supply": "90-day supply",
+      "status": "Ready for pickup",
+      "tone": "ready",
+      "place": "Downtown pharmacy",
+      "ready_since_day": -1,
+      "hold_days": 10
+    },
+    {
+      "medication": "Lisinopril 10 mg",
+      "supply": "90-day supply",
+      "status": "On hold",
+      "tone": "hold",
+      "reason": "No refills left",
+      "prescriber": "Dr. Priya Patel"
+    },
+    {
+      "medication": "Eszopiclone 2 mg",
+      "supply": "30-day supply",
+      "status": "Shipped",
+      "tone": "shipped",
+      "carrier": "USPS",
+      "delivery_day": 2,
+      "tracking_number": "9400 1118 9922 3344 5566 77"
+    }
+  ],
+  "bill": {
+    "statement_id": "ST-88213",
+    "visit_day": -20,
+    "provider": "Dr. Priya Patel",
+    "location": "Decagon Health Downtown",
+    "amount_due": 212,
+    "lines": [
+      { "service": "Annual physical", "owes": 0 },
+      { "service": "Knee pain visit", "owes": 150 },
+      { "service": "Knee X-ray", "owes": 62 }
+    ]
+  },
+  "payment_methods": ["Visa ending in 4242", "HSA card ending in 1881"],
+  "coaches": [
+    "Coach Maya Thompson, NBC-HWC",
+    "Coach Andre Lewis, NBC-HWC"
+  ]
+}
