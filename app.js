@@ -134,8 +134,12 @@ function postContext() {
 }
 
 // The tapped sentence goes in as the member's first message. The chat queues an
-// sdkMessage until the conversation has loaded, but only hears it once its listener
-// is up, which it announces with DECAGON_LOADED. Once per frame load.
+// sdkMessage until the conversation has loaded, but drops one sent before its
+// listener is up, and in an iframe it never says when that is (DECAGON_LOADED goes
+// only to native apps). So it goes once per frame load, ENTRY_DELAY ms after load:
+// every copy would be sent, so it is never retried.
+const ENTRY_DELAY = 1200;
+
 function sendEntry() {
   const frame = document.getElementById("chat-frame");
   if (entrySent || !frame || !frame.contentWindow || !currentMeta.entry_message) return;
@@ -147,17 +151,13 @@ function ensureFrame() {
   if (!isPhoneApp()) return;
   const frame = document.getElementById("chat-frame");
   if (frameReady) return;
-  window.addEventListener("message", (e) => {
-    if (e.source !== frame.contentWindow || !e.data || e.data.type !== "DECAGON_LOADED") return;
-    postContext();
-    sendEntry();
-  });
   frame.addEventListener("load", () => {
     if (!frame.getAttribute("src")) return;
     frameLoaded = true;
     postContext();
     setTimeout(postContext, 800);
     setTimeout(postContext, 2200);
+    setTimeout(sendEntry, ENTRY_DELAY);
   });
   frameReady = true;
 }
