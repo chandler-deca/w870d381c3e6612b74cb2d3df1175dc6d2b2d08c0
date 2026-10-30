@@ -464,12 +464,25 @@ html.app-page body[data-screen="bill"] .app {
 .app .pay {
   display: flex;
   align-items: center;
+  gap: 12px;
   width: 100%;
-  padding: 14px 18px;
+  padding: 12px 18px;
   text-align: left;
   font-size: 16px;
   font-weight: 600;
   border-top: 0.5px solid rgba(60, 60, 67, 0.12);
+}
+.app .pay .mark {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  background: #eeeeff;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .app .primary {

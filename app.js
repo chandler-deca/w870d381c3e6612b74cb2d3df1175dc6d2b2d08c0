@@ -248,9 +248,11 @@ function bill(m) {
   const lines = m.bill.lines.map((line) => `
     <span class="line"><span>${line.service}</span>${line.owes ? `<b>${money(line.owes)}</b>` : `<b class="covered">Covered</b>`}</span>
   `).join("");
-  const pays = m.payment_methods.map((method) => `
-    <button class="pay" type="button" data-chat="bill">${PAY_LABEL[method] || method}</button>
-  `).join("");
+  const pays = m.payment_methods.map((method) => {
+    const label = PAY_LABEL[method] || method;
+    const mark = label.startsWith("HSA") ? "H" : "V";
+    return `<button class="pay" type="button" data-chat="bill"><span class="mark">${mark}</span><span>${label}</span>${CHEVRON}</button>`;
+  }).join("");
   return `
     <div class="sheet">
       <button class="statement" type="button" data-chat="bill">
