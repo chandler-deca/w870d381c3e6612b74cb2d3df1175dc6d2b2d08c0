@@ -543,9 +543,7 @@ html.app-page body[data-screen="bill"] .app {
   width: 25px;
   height: 25px;
 }
-.app .tabs svg.solid { visibility: hidden; }
-.app .tabs button[aria-current="page"] svg.line { visibility: hidden; }
-.app .tabs button[aria-current="page"] svg.solid { visibility: visible; }
+.app .tabs svg.line { display: none; }
 
 .chat {
   position: fixed;

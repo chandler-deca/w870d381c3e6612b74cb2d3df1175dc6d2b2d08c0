@@ -68,6 +68,7 @@ let frameReady = false;
 let frameLoaded = false;
 let chatOpened = false;
 let assignedSrc = "";
+let entrySent = false;
 let currentMeta = sessionMetadata();
 
 function shownDate(offset, weekdays) {
@@ -109,7 +110,10 @@ function hasUserSignature() {
 function chatSrc() {
   const auth = self.__decagonAuth || {};
   const url = new URL(CHAT);
-  const meta = sessionMetadata();
+  // The mobile chat copies these query params into session metadata before it
+  // creates the conversation. A preload would create that conversation with the
+  // empty entry fields, and a later postMessage would not replace it.
+  const meta = currentMeta;
   Object.keys(meta).forEach((key) => url.searchParams.set(key, meta[key]));
   // An unsigned userId makes /conversation/user fail and the mobile chat
   // shows "Please reopen this interface." Set the widget user only with a signature.
@@ -129,22 +133,47 @@ function postContext() {
   frame.contentWindow.postMessage({ metadata: currentMeta }, "*");
 }
 
+// The tapped sentence goes in as the member's first message. The chat queues an
+// sdkMessage until the conversation has loaded, but only hears it once its listener
+// is up, which it announces with DECAGON_LOADED. Once per frame load.
+function sendEntry() {
+  const frame = document.getElementById("chat-frame");
+  if (entrySent || !frame || !frame.contentWindow || !currentMeta.entry_message) return;
+  entrySent = true;
+  frame.contentWindow.postMessage({ sdkMessage: currentMeta.entry_message }, "*");
+}
+
 function ensureFrame() {
   if (!isPhoneApp()) return;
   const frame = document.getElementById("chat-frame");
-  if (!frameReady) {
-    frame.addEventListener("load", () => {
-      if (!frame.getAttribute("src")) return;
-      frameLoaded = true;
-      postContext();
-      setTimeout(postContext, 800);
-    });
-    frameReady = true;
+  if (frameReady) return;
+  window.addEventListener("message", (e) => {
+    if (e.source !== frame.contentWindow || !e.data || e.data.type !== "DECAGON_LOADED") return;
+    postContext();
+    sendEntry();
+  });
+  frame.addEventListener("load", () => {
+    if (!frame.getAttribute("src")) return;
+    frameLoaded = true;
+    postContext();
+    setTimeout(postContext, 800);
+    setTimeout(postContext, 2200);
+  });
+  frameReady = true;
+}
+
+function loadFrame() {
+  ensureFrame();
+  const frame = document.getElementById("chat-frame");
+  const next = chatSrc();
+  if (frame.getAttribute("src") === next) {
+    if (frameLoaded) postContext();
+    return;
   }
-  if (!assignedSrc) {
-    assignedSrc = chatSrc();
-    frame.src = assignedSrc;
-  }
+  assignedSrc = next;
+  frameLoaded = false;
+  entrySent = false;
+  frame.src = next;
 }
 
 function openChat(partial) {
@@ -159,7 +188,7 @@ function openChat(partial) {
   const app = document.querySelector(".app");
   if (app) app.inert = true;
   setTheme("#5956ff");
-  postContext();
+  loadFrame();
 }
 
 function statusLabel(rx) {
@@ -414,8 +443,6 @@ document.addEventListener("decagon-auth", () => {
   assignedSrc = next;
   document.getElementById("chat-frame").src = next;
 });
-
-ensureFrame();
 
 fetch("member.json")
   .then((res) => res.json())
