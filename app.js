@@ -101,13 +101,20 @@ function setTheme(color) {
   if (theme) theme.setAttribute("content", color);
 }
 
+function hasUserSignature() {
+  const auth = self.__decagonAuth || {};
+  return !!(auth["x-decagon-auth-signature"] && auth["x-decagon-auth-epoch"]);
+}
+
 function chatSrc() {
   const auth = self.__decagonAuth || {};
   const url = new URL(CHAT);
   const meta = sessionMetadata();
   Object.keys(meta).forEach((key) => url.searchParams.set(key, meta[key]));
-  url.searchParams.set("userId", USER_ID);
-  if (auth["x-decagon-auth-signature"] && auth["x-decagon-auth-epoch"]) {
+  // An unsigned userId makes /conversation/user fail and the mobile chat
+  // shows "Please reopen this interface." Set the widget user only with a signature.
+  if (hasUserSignature()) {
+    url.searchParams.set("userId", USER_ID);
     url.searchParams.set("user_id_auth_signature", auth["x-decagon-auth-signature"]);
     url.searchParams.set("user_id_auth_epoch", auth["x-decagon-auth-epoch"]);
   }
@@ -118,7 +125,7 @@ function chatSrc() {
 function postContext() {
   const frame = document.getElementById("chat-frame");
   if (!frame || !frame.contentWindow) return;
-  frame.contentWindow.postMessage({ userId: USER_ID }, "*");
+  if (hasUserSignature()) frame.contentWindow.postMessage({ userId: USER_ID }, "*");
   frame.contentWindow.postMessage({ metadata: currentMeta }, "*");
 }
 
