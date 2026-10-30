@@ -30,12 +30,16 @@
       var root = document.documentElement;
       root.classList.remove("pending");
       root.classList.add(phone ? "phone" : "desk");
+      if (phone) {
+        var theme = document.querySelector('meta[name="theme-color"]');
+        if (theme) theme.setAttribute("content", "#ffffff");
+      }
     })();
   </script>
   <script src="surface.js?v=2"></script>
   <link rel="icon" href="assets/favicon.png" type="image/png">
   <link rel="stylesheet" href="styles.css?v=gap">
-  <link rel="stylesheet" href="app.css?v=3">
+  <link rel="stylesheet" href="app.css?v=4">
 </head>
 <body>
   <div class="stage" inert>
@@ -77,7 +81,7 @@
 
     <section class="hero">
       <div class="hero-copy">
-        <h1>Las Vegas</h1>
+        <h1>Welcome to Las Vegas!</h1>
         <p>Doctors, pharmacies, and your health plan, connected. Office, video, and same-day care.</p>
       </div>
       <div class="photo">
@@ -89,24 +93,19 @@
 
   <div class="app">
     <header class="top">
-      <span class="mark" aria-hidden="true"></span>
+      <span class="avatar-frame"><img class="avatar" src="assets/jordan-rivera.jpg" alt="Jordan Rivera" width="36" height="36"></span>
       <div class="who">
         <b>Decagon Health</b>
-        <span id="plan">Jordan Rivera</span>
       </div>
       <button class="chat-btn" id="open-chat" type="button">Chat</button>
     </header>
     <main id="main"></main>
     <nav class="tabs" id="tabs" aria-label="Sections"></nav>
   </div>
-  <div class="chat" id="chat" hidden>
-    <header class="chat-top">
-      <button class="back" id="close-chat" type="button">Back</button>
-      <b>Chat</b>
-    </header>
-    <iframe id="chat-frame" title="Chat with Decagon Health" referrerpolicy="no-referrer"></iframe>
+  <div class="chat is-closed" id="chat" inert aria-hidden="true">
+    <iframe id="chat-frame" title="Chat with Decagon Health" referrerpolicy="no-referrer" loading="eager"></iframe>
   </div>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
   <script>
     if (document.documentElement.classList.contains("desk")) {
       const loader = document.createElement("script");
