@@ -206,14 +206,21 @@ function rxDetail(rx) {
   return detail;
 }
 
+function scene(src, label) {
+  const caption = label ? `<figcaption>${label}</figcaption>` : "";
+  return `<figure class="scene"><img src="${src}" alt="">${caption}</figure>`;
+}
+
 function home(m) {
   const visit = shownDate(m.appointment.day);
   const ready = m.prescriptions.find((item) => item.tone === "ready");
   return `
+    <div class="screen">
     <div class="hello">
       <h1>Hi, ${m.member.first_name}</h1>
       <p>${m.member.plan_type}</p>
     </div>
+    ${scene("assets/desert-home.jpg", "Las Vegas")}
     <button class="hero" type="button" data-go="care">
       <img src="assets/priya-patel.jpg" alt="" width="64" height="64">
       <span>
@@ -239,12 +246,15 @@ function home(m) {
     </div>
     <button class="primary" type="button" data-chat="chat">Chat with us</button>
     <p class="fine">Emergencies: call 911. This is a demo. Nothing here is a real account.</p>
+    </div>
   `;
 }
 
 function care(m) {
   const a = m.appointment;
   return `
+    <div class="screen">
+    ${scene("assets/desert-care.jpg", "400 Market Street")}
     <button class="visit" type="button" data-chat="visit">
       <img src="assets/priya-patel.jpg" alt="" width="56" height="56">
       <span class="visit-copy">
@@ -260,6 +270,7 @@ function care(m) {
     </div>
     <p class="note">You can move this visit in chat until 24 hours before. A later change is $25.</p>
     <button class="primary" type="button" data-chat="visit">Change this visit</button>
+    </div>
   `;
 }
 
@@ -275,8 +286,11 @@ function pharmacy(m) {
     </button>
   `).join("");
   return `
+    <div class="screen">
+    ${scene("assets/desert-pharmacy.jpg", "Downtown pharmacy")}
     <div class="rx-list">${rows}</div>
     <button class="primary" type="button" data-chat="ask">Ask about a prescription</button>
+    </div>
   `;
 }
 
@@ -290,6 +304,8 @@ function bill(m) {
     return `<button class="pay" type="button" data-chat="bill"><span class="mark">${mark}</span><span>${label}</span>${CHEVRON}</button>`;
   }).join("");
   return `
+    <div class="screen">
+    ${scene("assets/desert-bill.jpg", "")}
     <div class="sheet">
       <button class="statement" type="button" data-chat="bill">
         <span class="amount">${money(m.bill.amount_due)}</span>
@@ -303,6 +319,7 @@ function bill(m) {
       ${pays}
     </div>
     <button class="primary" type="button" data-chat="bill">Review payment</button>
+    </div>
   `;
 }
 
@@ -326,12 +343,15 @@ function coach(m) {
       </button>`;
   }).join("");
   return `
+    <div class="screen">
+    ${scene("assets/desert-coach.jpg", "Red Rock")}
     <div class="intro">
       <h2>Coaching is free on your plan</h2>
       <p>Weight, eating, activity, sleep, stress, tobacco.</p>
     </div>
     <div class="people">${rows}</div>
     <button class="primary" type="button" data-chat="book">Book a session</button>
+    </div>
   `;
 }
 

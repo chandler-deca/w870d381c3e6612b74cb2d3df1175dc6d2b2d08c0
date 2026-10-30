@@ -157,7 +157,44 @@ html.app-page body[data-screen="bill"] .app {
   flex: 1;
   min-height: 0;
   overflow: auto;
-  padding: 6px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  padding: 6px 16px 12px;
+}
+
+.app .screen {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.app .scene {
+  position: relative;
+  flex: 1 1 168px;
+  min-height: 168px;
+  margin: 0 0 14px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+.app .scene img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.app .scene figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 28px 14px 10px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
 .app .hello { margin: 6px 0 16px; }
