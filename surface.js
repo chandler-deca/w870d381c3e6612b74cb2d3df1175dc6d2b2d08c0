@@ -50,7 +50,7 @@
   if (typeof document === "undefined") return;
 
   // The page picks phone or desk inline, before this file. Do not navigate:
-  // a service worker that rewrites the next URL was sending iPhones back to the booth.
+  // a service worker that rewrites the next URL was sending iPhones back to the desktop site.
   document.documentElement.classList.remove("pending");
 
   if (!("serviceWorker" in navigator)) return;

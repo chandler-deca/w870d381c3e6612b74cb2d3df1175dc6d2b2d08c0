@@ -16,7 +16,7 @@ self.addEventListener("message", function (event) {
 
 // Ordinary visits are decided in the page from navigator, not here. Safari
 // often leaves User-Agent off the navigation request, and swapping in the
-// booth on that miss is what pinned iPhones to the desktop chat card.
+// desktop site on that miss is what pinned iPhones to the desktop chat card.
 self.addEventListener("fetch", function (event) {
   if (event.request.mode !== "navigate") return;
   if (event.request.headers.get("x-decagon-fetch") === "1") return;
